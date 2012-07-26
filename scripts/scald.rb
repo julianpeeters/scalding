@@ -1,3 +1,471 @@
+GitHub GitHub
+
+    Explore
+    Gist
+    Blog
+    Help
+
+julianpeeters
+
+    1
+    52
+
+public johnynek / scalding forked from twitter/scalding
+
+    Code
+    Network
+    Pull Requests 0
+    Wiki
+    Graphs
+
+    Tags
+    Downloads
+
+    Files
+    Commits
+    Branches 23
+
+scalding / scripts / scald.rb
+johnynek 2 days ago
+Fixes for scald.rb on linux/ruby 1.9
+
+4 contributors
+executable file 432 lines (378 sloc) 13.994 kb
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177
+178
+179
+180
+181
+182
+183
+184
+185
+186
+187
+188
+189
+190
+191
+192
+193
+194
+195
+196
+197
+198
+199
+200
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225
+226
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252
+253
+254
+255
+256
+257
+258
+259
+260
+261
+262
+263
+264
+265
+266
+267
+268
+269
+270
+271
+272
+273
+274
+275
+276
+277
+278
+279
+280
+281
+282
+283
+284
+285
+286
+287
+288
+289
+290
+291
+292
+293
+294
+295
+296
+297
+298
+299
+300
+301
+302
+303
+304
+305
+306
+307
+308
+309
+310
+311
+312
+313
+314
+315
+316
+317
+318
+319
+320
+321
+322
+323
+324
+325
+326
+327
+328
+329
+330
+331
+332
+333
+334
+335
+336
+337
+338
+339
+340
+341
+342
+343
+344
+345
+346
+347
+348
+349
+350
+351
+352
+353
+354
+355
+356
+357
+358
+359
+360
+361
+362
+363
+364
+365
+366
+367
+368
+369
+370
+371
+372
+373
+374
+375
+376
+377
+378
+379
+380
+381
+382
+383
+384
+385
+386
+387
+388
+389
+390
+391
+392
+393
+394
+395
+396
+397
+398
+399
+400
+401
+402
+403
+404
+405
+406
+407
+408
+409
+410
+411
+412
+413
+414
+415
+416
+417
+418
+419
+420
+421
+422
+423
+424
+425
+426
+427
+428
+429
+430
+431
+
+	
+
 #!/usr/bin/env ruby
 $LOAD_PATH << File.join(File.expand_path(File.dirname(File.symlink?(__FILE__) ? File.readlink(__FILE__) : __FILE__)), 'lib')
 
@@ -11,14 +479,14 @@ SCALDING_VERSION="0.7.3"
 
 USAGE = <<END
 Usage : scald.rb [--jar jarfile] [--hdfs|--hdfs-local|--local|--print] job <job args>
- --clean: clean rsync and maven state before running
- --jar ads-batch: specify the jar file
- --hdfs: if job ends in ".scala" or ".java" and the file exists, link it against JARFILE (below) and then run it on HOST.
-         else, it is assumed to be a full classname to an item in the JARFILE, which is run on HOST
- --hdfs-local: run in hadoop local mode (--local is cascading local mode)
- --host: specify the hadoop host where the job runs
- --local: run in cascading local mode (does not use hadoop)
- --print: print the command YOU SHOULD ENTER on the remote node. Useful for screen sessions.
+--clean: clean rsync and maven state before running
+--jar ads-batch: specify the jar file
+--hdfs: if job ends in ".scala" or ".java" and the file exists, link it against JARFILE (below) and then run it on HOST.
+else, it is assumed to be a full classname to an item in the JARFILE, which is run on HOST
+--hdfs-local: run in hadoop local mode (--local is cascading local mode)
+--host: specify the hadoop host where the job runs
+--local: run in cascading local mode (does not use hadoop)
+--print: print the command YOU SHOULD ENTER on the remote node. Useful for screen sessions.
 END
 
 ##############################################################
@@ -46,17 +514,19 @@ end
 
 CONFIG_RC = begin
 #put configuration in .scaldrc in HOME to override the defaults below:
-    YAML.load_file(ENV['HOME'] + "/.scaldrc")
+    YAML.load_file(ENV['HOME'] + "/.scaldrc") || {} #seems that on ruby 1.9, this returns false on failure
   rescue
     {}
   end
 
 CONFIG = CONFIG_DEFAULT.merge!(CONFIG_RC)
 
-#optionally set variables:
-TMPDIR=CONFIG["tmpdir"] || ENV['TMPDIR']
+#optionally set variables (not linux often doesn't have this set, and falls back to TMP. Set up a
+#YAML file in .scaldrc with "tmpdir: my_tmp_directory_name" or export TMPDIR="/my/tmp" to set on
+#linux
+TMPDIR=CONFIG["tmpdir"] || ENV['TMPDIR'] || "/tmp"
 TMPMAVENDIR = File.join(TMPDIR, "maven")
-BUILDDIR=CONFIG["builddir"] || (ENV['TMPDIR'] + "script-build")
+BUILDDIR=CONFIG["builddir"] || File.join(TMPDIR,"script-build")
 LOCALMEM=CONFIG["localmem"] || "3g"
 DEPENDENCIES=CONFIG["depends"] || []
 RSYNC_STATFILE_PREFIX = TMPDIR + "/scald.touch."
@@ -305,9 +775,9 @@ def human_filesize(filename)
   size = File.size(filename)
   case
   when size < 2**10: '%d bytes' % size
-  when size < 2**20: '%.1fK'    % (1.0 * size / 2**10)
-  when size < 2**30: '%.1fM'    % (1.0 * size / 2**20)
-  else               '%.1fG'    % (1.0 * size / 2**30)
+  when size < 2**20: '%.1fK' % (1.0 * size / 2**10)
+  when size < 2**30: '%.1fM' % (1.0 * size / 2**20)
+  else '%.1fG' % (1.0 * size / 2**30)
   end
 end
 
@@ -427,3 +897,44 @@ begin
 rescue
   exit(1)
 end
+
+GitHub Links
+
+    GitHub
+    About
+    Blog
+    Features
+    Contact & Support
+    Training
+    GitHub Enterprise
+    Site Status
+
+    Clients
+    GitHub for Mac
+    GitHub for Windows
+    GitHub for Eclipse
+    GitHub Mobile Apps
+
+    Tools
+    Gauges: Web analytics
+    Speaker Deck: Presentations
+    Gist: Code snippets
+    Extras
+    Job Board
+    GitHub Shop
+    The Octodex
+
+    Documentation
+    GitHub Help
+    Developer API
+    GitHub Flavored Markdown
+    GitHub Pages
+
+    Terms of Service
+    Privacy
+    Security
+
+© 2012 GitHub Inc. All rights reserved.
+Dedicated Server Powered by the Dedicated Servers and
+Cloud Computing of Rackspace Hosting®
+

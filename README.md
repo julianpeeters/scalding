@@ -1,8 +1,8 @@
 #seqProfiler
 
-seqProfiler is a toy Scalding application for my learning of Scalding, and for the analysis of sequence distributions in biological sequence data.  
+seqProfiler is a toy Scalding application for my learning of Scalding, and for the analysis of sequence distributions in biological sequence data.  The Template for this code was Scalding Tutorial4, which was cloned/forked and modified here by Julian Peeters.
 
-More about Scalding<http://github.com/twitter/scalding>:
+More about Scalding <http://github.com/twitter/scalding>:
 
 	"Scalding is a Scala library that makes it easy to write MapReduce jobs in Hadoop. Instead of forcing you to write raw map and reduce functions, 	Scalding allows you to write code that looks like *natural* Scala. It's similar to other MapReduce platforms like Pig, but offers a more powerful level 	of abstraction due to its built-in integration with Scala and the JVM.
 	

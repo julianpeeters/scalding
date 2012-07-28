@@ -1,0 +1,17 @@
+ w	2
+Go	1
+He	1
+by	1
+db	1
+e 	1
+el	1
+ld	2
+ll	1
+lo	1
+o 	1
+od	1
+oo	1
+or	2
+rl	2
+wo	2
+ye	1
